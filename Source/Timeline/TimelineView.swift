@@ -95,8 +95,7 @@ public class TimelineView: UIView, ReusableView {
     layer.contentsScale = 1
     contentMode = .redraw
     backgroundColor = .white
-    addSubview(nowLine)
-    
+    //addSubview(nowLine)
     // Add long press gesture recognizer
     addGestureRecognizer(longPressGestureRecognizer)
   }
@@ -237,9 +236,9 @@ public class TimelineView: UIView, ReusableView {
         }
         .first!
 
-      let lastEvent = overlappingEvents.last!
+      let isLastEvent = overlappingEvents.last!
       if longestEvent.descriptor.datePeriod.overlaps(with: event.descriptor.datePeriod) ||
-        lastEvent.descriptor.datePeriod.overlaps(with: event.descriptor.datePeriod) {
+        isLastEvent.descriptor.datePeriod.overlaps(with: event.descriptor.datePeriod) {
         overlappingEvents.append(event)
         continue
       } else {

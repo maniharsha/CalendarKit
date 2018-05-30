@@ -20,6 +20,11 @@ public class TimelinePagerView: UIView {
     return timelinePager.reusableViews.first?.contentOffset ?? CGPoint()
   }
 
+   let startDate = Date()
+   let endDate = Date().add(TimeChunk.dateComponents(days: 14))
+   public var calendar = Calendar.autoupdatingCurrent
+
+    
   open var autoScrollToFirstEvent = false
 
   let timelinePager = PagingScrollView<TimelineContainer>()
@@ -115,6 +120,8 @@ public class TimelinePagerView: UIView {
     let validEvents = events.filter{$0.datePeriod.overlaps(with: day)}
     timeline.layoutAttributes = validEvents.map(EventLayoutAttributes.init)
   }
+    
+
 }
 
 extension TimelinePagerView: DayViewStateUpdating {
@@ -143,7 +150,37 @@ extension TimelinePagerView: DayViewStateUpdating {
 
 
 extension TimelinePagerView: PagingScrollViewDelegate {
-  func scrollviewDidScrollToViewAtIndex(_ index: Int) {
+    
+    func beginningOfWeek(_ date: Date) -> Date
+    {
+        return calendar.date(from: DateComponents(calendar: calendar,
+                                                  weekday: calendar.firstWeekday,
+                                                  weekOfYear: date.weekOfYear,
+                                                  yearForWeekOfYear: date.yearForWeekOfYear))!
+    }
+    
+    func scrollviewCanRecenter(_ index: Int, scrollDirection:TSScrollDirection) -> Bool
+    {
+        let leftView = timelinePager.reusableViews[0].timeline
+        let rightView = timelinePager.reusableViews[2].timeline
+        
+        let daysFromStart = leftView.date.days(from: beginningOfWeek(startDate), calendar: calendar)
+        
+        let daysFromEnd = rightView.date.days(from: beginningOfWeek(endDate).add(TimeChunk.dateComponents(days: 6)), calendar: calendar)
+        
+        
+        if ((daysFromStart == 0 && scrollDirection != .ScrollDirectionLeft) || (daysFromEnd == 0 && scrollDirection != .ScrollDirectionRight))
+        {
+            return false
+        }
+        else
+        {
+            return true
+        }
+    }
+    
+  func scrollviewDidScrollToViewAtIndex(_ index: Int)
+  {
     let nextDate = timelinePager.reusableViews[index].timeline.date
     delegate?.timelinePager(timelinePager: self, willMoveTo: nextDate)
     state?.client(client: self, didMoveTo: nextDate)
@@ -158,10 +195,21 @@ extension TimelinePagerView: PagingScrollViewDelegate {
     guard let state = state
       else{ return }
 
-    leftView.date = state.selectedDate.add(TimeChunk.dateComponents(days: -1))
-    rightView.date = state.selectedDate.add(TimeChunk.dateComponents(days: 1))
-
-    [leftView, rightView].forEach{self.updateTimeline($0)}
+    let daysFromStart = leftView.date.days(from: beginningOfWeek(startDate), calendar: calendar)
+    
+    let daysFromEnd = rightView.date.days(from: beginningOfWeek(endDate).add(TimeChunk.dateComponents(days: 6)), calendar: calendar)
+    
+    if (daysFromStart == 0 || daysFromEnd == 0)
+    {
+        return 
+    }
+    else
+    {
+        leftView.date = state.selectedDate.add(TimeChunk.dateComponents(days: -1))
+        rightView.date = state.selectedDate.add(TimeChunk.dateComponents(days: 1))
+        
+        [leftView, rightView].forEach{self.updateTimeline($0)}
+    }
   }
 
   func scrollToFirstEventIfNeeded() {

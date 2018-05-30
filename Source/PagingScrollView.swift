@@ -2,18 +2,27 @@ import UIKit
 
 protocol PagingScrollViewDelegate: class {
   func scrollviewDidScrollToViewAtIndex(_ index: Int)
+    func scrollviewCanRecenter(_ index: Int, scrollDirection:TSScrollDirection) -> Bool
 }
 
 protocol ReusableView: class {
   func prepareForReuse()
 }
 
+enum TSScrollDirection:String{
+    case ScrollDirectionNone
+    case ScrollDirectionRight
+    case ScrollDirectionLeft
+}
+
 class PagingScrollView<T: UIView>: UIScrollView, UIScrollViewDelegate where T: ReusableView {
 
   var reusableViews = [T]()
   weak var viewDelegate: PagingScrollViewDelegate?
-
+  var calendarType:calendarType = .RegularCalendar
   var previousPage: CGFloat = 1
+    var lastContentOffset:CGFloat = 0.0
+    
   var currentScrollViewPage: CGFloat {
     get {
       let width = bounds.width
@@ -46,6 +55,7 @@ class PagingScrollView<T: UIView>: UIScrollView, UIScrollViewDelegate where T: R
     showsHorizontalScrollIndicator = false
     showsVerticalScrollIndicator = false
     delegate = self
+    lastContentOffset = contentOffset.x
   }
 
   override func layoutSubviews() {
@@ -97,12 +107,32 @@ class PagingScrollView<T: UIView>: UIScrollView, UIScrollViewDelegate where T: R
     setContentOffset(CGPoint(x: contentOffset.x - bounds.width, y: 0), animated: true)
   }
 
-  func checkForPageChange() {
-    recenter()
-    if currentIndex != previousPage {
-      viewDelegate?.scrollviewDidScrollToViewAtIndex(Int(currentScrollViewPage))
-      previousPage = currentIndex
+  func checkForPageChange()
+  {
+    var scrollDirection:TSScrollDirection = .ScrollDirectionNone
+    
+    if(lastContentOffset > contentOffset.x)
+    {
+        scrollDirection = .ScrollDirectionRight
+    }else if(lastContentOffset < contentOffset.x)
+    {
+        scrollDirection = .ScrollDirectionLeft
     }
+    
+    if (viewDelegate?.scrollviewCanRecenter(Int(currentScrollViewPage), scrollDirection: scrollDirection))!
+    {
+        recenter()
+    }
+    
+    lastContentOffset = contentOffset.x
+    
+    viewDelegate?.scrollviewDidScrollToViewAtIndex(Int(currentScrollViewPage))
+    
+//    if currentIndex != previousPage
+//    {
+//      viewDelegate?.scrollviewDidScrollToViewAtIndex(Int(currentScrollViewPage))
+//      previousPage = currentIndex
+//    }
   }
 
   func scrollViewDidEndDragging(_ scrollView: UIScrollView, willDecelerate decelerate: Bool) {

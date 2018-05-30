@@ -86,7 +86,7 @@ public class DaySymbolsStyle: NSCopying {
 
 public class SwipeLabelStyle: NSCopying {
   public var textColor = UIColor.black
-  public var font = UIFont.systemFont(ofSize: 15)
+  public var font = UIFont.boldSystemFont(ofSize: 17)
   public init() {}
   public func copy(with zone: NSZone? = nil) -> Any {
     let copy = SwipeLabelStyle()
@@ -98,10 +98,10 @@ public class SwipeLabelStyle: NSCopying {
 
 public class TimelineStyle: NSCopying {
   public var timeIndicator = CurrentTimeIndicatorStyle()
-  public var timeColor = UIColor.lightGray
-  public var lineColor = UIColor.lightGray
+  public var timeColor = UIColor.black
+  public var lineColor = UIColor.black
   public var backgroundColor = UIColor.white
-  public var font = UIFont.boldSystemFont(ofSize: 11)
+  public var font = UIFont.boldSystemFont(ofSize: 12)
   public var dateStyle : DateStyle = .system
   public init() {}
   public func copy(with zone: NSZone? = nil) -> Any {

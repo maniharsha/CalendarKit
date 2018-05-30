@@ -16,19 +16,28 @@ enum Generator {
   }
 
   static func timeStrings12H() -> [String] {
-    var numbers = [String]()
-    numbers.append("12")
+    var AMNumbers = [String]()
 
-    for i in 1...11 {
+    for i in 6...11
+    {
       let string = String(i)
-      numbers.append(string)
+      AMNumbers.append(string)
+      AMNumbers.append(string + ":30")
     }
-
-    var am = numbers.map { $0 + " AM" }
-    var pm = numbers.map { $0 + " PM" }
+    
+    var am = AMNumbers.map { $0 + " AM" }
     am.append("Noon")
-    pm.removeFirst()
-    pm.append(am.first!)
+    am.append("12:30")
+
+    var PMNumbers = [String]()
+    for i in 1...7
+    {
+        let string = String(i)
+        PMNumbers.append(string)
+        PMNumbers.append(string + ":30")
+    }
+    
+    let pm = PMNumbers.map { $0 + " PM" }
     return am + pm
   }
 }
