@@ -169,7 +169,7 @@ public class TimelineView: UIView, ReusableView {
       context?.strokePath()
       context?.restoreGState()
 
-      if i == hourToRemoveIndex { continue }
+      //if i == hourToRemoveIndex { continue }
         
       let fontSize = style.font.pointSize
       let timeRect = CGRect(x: 2, y: iFloat * verticalDiff + verticalInset - 7,
