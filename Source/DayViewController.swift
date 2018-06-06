@@ -63,4 +63,14 @@ open class DayViewController: UIViewController, EventDataSource, DayViewDelegate
 
   open func dayView(dayView: DayView, didMoveTo date: Date) {
   }
+
+  open func selectAllEvents(forDate: Date)
+  {
+        
+  }
+    
+  open func deSelectAllEvents(forDate: Date)
+  {
+        
+  }
 }

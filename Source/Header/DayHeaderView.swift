@@ -8,12 +8,23 @@ enum calendarType:String{
     case RegularCalendar
 }
 
+public protocol SelectAllEventsDelegate: class
+{
+    func selectAllEvents(forDate:Date)
+    func deSelectAllEvents(forDate:Date)
+}
+
 public class DayHeaderView: UIView {
 
   public var daysInWeek = 7
 
   public var calendar = Calendar.autoupdatingCurrent
-
+  public weak var selectAllEventsDelegate: SelectAllEventsDelegate?
+    
+  public var selectAllView: UIView = UIView()
+  public var selectAllButton:UIButton = UIButton(type: .custom)
+  public var deSelectAllButton:UIButton = UIButton(type: .custom)
+  public var selectedDate = Date()
   var style = DayHeaderStyle()
     
   let startDate = Date()
@@ -52,14 +63,37 @@ public class DayHeaderView: UIView {
     configurePages()
   }
 
-  func configure() {
-    [daySymbolsView, pagingScrollView, swipeLabelView].forEach {
+  func configure()
+  {
+    selectAllButton.setTitle("Select All", for: .normal)
+    selectAllButton.setTitleColor(UIColor.blue, for: .normal)
+    selectAllButton.addTarget(self, action: #selector(selectAllButtonPressed), for: .touchUpInside)
+    
+    deSelectAllButton.setTitle("Deselect All", for: .normal)
+    deSelectAllButton.setTitleColor(UIColor.blue, for: .normal)
+    deSelectAllButton.addTarget(self, action: #selector(deselectAllButtonPressed), for: .touchUpInside)
+    
+    selectAllView.addSubview(selectAllButton)
+    selectAllView.addSubview(deSelectAllButton)
+    selectAllView.groupAndFill(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10)
+    [daySymbolsView, pagingScrollView, swipeLabelView, selectAllView].forEach {
+
       addSubview($0)
     }
     pagingScrollView.viewDelegate = self
     backgroundColor = style.backgroundColor
   }
 
+  @objc func selectAllButtonPressed()
+  {
+    selectAllEventsDelegate?.selectAllEvents(forDate: selectedDate)
+  }
+    
+  @objc func deselectAllButtonPressed()
+  {
+    selectAllEventsDelegate?.deSelectAllEvents(forDate: selectedDate)
+  }
+    
   func configurePages(_ selectedDate: Date = Date())
   {
 
@@ -192,7 +226,9 @@ public class DayHeaderView: UIView {
     pagingScrollView.contentSize = CGSize(width: bounds.size.width * CGFloat(pagingScrollView.reusableViews.count), height: 0)
     daySymbolsView.anchorAndFillEdge(.top, xPad: 0, yPad: 0, otherSize: daySymbolsViewHeight)
     pagingScrollView.alignAndFillWidth(align: .underCentered, relativeTo: daySymbolsView, padding: 0, height: pagingScrollViewHeight)
-    swipeLabelView.anchorAndFillEdge(.bottom, xPad: 0, yPad: 10, otherSize: swipeLabelViewHeight)
+    swipeLabelView.alignAndFillWidth(align: .underCentered, relativeTo: pagingScrollView, padding: 0, height: swipeLabelViewHeight)
+    selectAllView.groupAndFill(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10)
+    selectAllView.anchorAndFillEdge(.bottom, xPad: 0, yPad: 10, otherSize: 30)
   }
 
   public func transitionToHorizontalSizeClass(_ sizeClass: UIUserInterfaceSizeClass) {
@@ -212,6 +248,7 @@ extension DayHeaderView: DayViewStateUpdating
 {
   public func move(from oldDate: Date, to newDate: Date)
   {
+    selectedDate = newDate
     if(calendarTypeUpdated == .RegularCalendar)
     {
         let newDate = newDate.dateOnly()

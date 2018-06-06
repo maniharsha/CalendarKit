@@ -8,6 +8,8 @@ public protocol DayViewDelegate: class {
   func dayViewDidLongPressTimelineAtHour(_ hour: Int)
   func dayView(dayView: DayView, willMoveTo date: Date)
   func dayView(dayView: DayView, didMoveTo  date: Date)
+  func selectAllEvents(forDate: Date)
+  func deSelectAllEvents(forDate: Date)
 }
 
 public class DayView: UIView {
@@ -36,7 +38,7 @@ public class DayView: UIView {
     return timelinePagerView.timelineScrollOffset
   }
 
-  static let headerVisibleHeight: CGFloat = 88
+  static let headerVisibleHeight: CGFloat = 128
   var headerHeight: CGFloat = headerVisibleHeight
 
   open var autoScrollToFirstEvent: Bool {
@@ -80,6 +82,7 @@ public class DayView: UIView {
     addSubview(timelinePagerView)
     addSubview(dayHeaderView)
     timelinePagerView.delegate = self
+    dayHeaderView.selectAllEventsDelegate = self
 
     if state == nil {
       state = DayViewState()
@@ -151,4 +154,15 @@ extension DayView: TimelineViewDelegate {
   public func timelineView(_ timelineView: TimelineView, didLongPressAt hour: Int) {
     delegate?.dayViewDidLongPressTimelineAtHour(hour)
   }
+}
+
+extension DayView: SelectAllEventsDelegate
+{
+    public func selectAllEvents(forDate: Date) {
+        delegate?.selectAllEvents(forDate: forDate)
+    }
+    
+    public func deSelectAllEvents(forDate: Date) {
+        delegate?.deSelectAllEvents(forDate: forDate)
+    }
 }

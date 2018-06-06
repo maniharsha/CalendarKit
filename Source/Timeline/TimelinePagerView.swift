@@ -14,6 +14,7 @@ public class TimelinePagerView: UIView {
 
   public weak var dataSource: EventDataSource?
   public weak var delegate: TimelinePagerViewDelegate?
+  public var isPrevRecenterd:Bool = true
 
   public var timelineScrollOffset: CGPoint {
     // Any view is fine as they are all synchronized
@@ -128,14 +129,20 @@ extension TimelinePagerView: DayViewStateUpdating {
   public func move(from oldDate: Date, to newDate: Date) {
     let oldDate = oldDate.dateOnly()
     let newDate = newDate.dateOnly()
-    if newDate.isEarlier(than: oldDate) {
+    if newDate.isEarlier(than: oldDate){
       var timelineDate = newDate.subtract(TimeChunk.dateComponents(days: 0))
       for timelineContainer in timelinePager.reusableViews {
         timelineContainer.timeline.date = timelineDate
         timelineDate = timelineDate.add(TimeChunk.dateComponents(days: 1))
         updateTimeline(timelineContainer.timeline)
       }
-      timelinePager.scrollBackward()
+        if(!isPrevRecenterd)
+        {
+            timelinePager.scrollBackwardTwice()
+        }else
+        {
+            timelinePager.scrollBackward()
+        }
     } else if newDate.isLater(than: oldDate) {
       var timelineDate = newDate.add(TimeChunk.dateComponents(days: 0))
       for timelineContainer in timelinePager.reusableViews.reversed() {
@@ -143,7 +150,13 @@ extension TimelinePagerView: DayViewStateUpdating {
         timelineDate = timelineDate.subtract(TimeChunk.dateComponents(days: 1))
         updateTimeline(timelineContainer.timeline)
       }
-      timelinePager.scrollForward()
+        if(!isPrevRecenterd)
+        {
+            timelinePager.scrollForwardTwice()
+        }else
+        {
+            timelinePager.scrollForward()
+        }
     }
   }
 }
@@ -171,10 +184,12 @@ extension TimelinePagerView: PagingScrollViewDelegate {
         
         if ((daysFromStart == 0 && scrollDirection != .ScrollDirectionLeft) || (daysFromEnd == 0 && scrollDirection != .ScrollDirectionRight))
         {
+            isPrevRecenterd = false
             return false
         }
         else
         {
+            isPrevRecenterd = true
             return true
         }
     }
@@ -199,7 +214,7 @@ extension TimelinePagerView: PagingScrollViewDelegate {
     
     let daysFromEnd = rightView.date.days(from: beginningOfWeek(endDate).add(TimeChunk.dateComponents(days: 6)), calendar: calendar)
     
-    if (daysFromStart == 0 || daysFromEnd == 0)
+    if (daysFromStart <= 0 || daysFromEnd >= 0)
     {
         return 
     }
