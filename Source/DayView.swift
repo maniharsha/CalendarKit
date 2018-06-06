@@ -24,7 +24,9 @@ public class DayView: UIView {
   }
 
   public weak var delegate: DayViewDelegate?
-
+  public var startDate = Date()
+  public var endDate = Date().add(TimeChunk.dateComponents(days: 13))
+    
   /// Hides or shows header view
   public var isHeaderViewVisible = true {
     didSet {
@@ -82,8 +84,13 @@ public class DayView: UIView {
     addSubview(timelinePagerView)
     addSubview(dayHeaderView)
     timelinePagerView.delegate = self
+    timelinePagerView.startDate = startDate
+    timelinePagerView.endDate = endDate
+    
     dayHeaderView.selectAllEventsDelegate = self
-
+    dayHeaderView.startDate = startDate
+    dayHeaderView.endDate = endDate
+    
     if state == nil {
       state = DayViewState()
     }
@@ -107,7 +114,8 @@ public class DayView: UIView {
     timelinePagerView.scrollToFirstEventIfNeeded()
   }
 
-  public func reloadData() {
+  public func reloadData()
+  {
     timelinePagerView.reloadData()
   }
 

@@ -5,6 +5,7 @@ open class DayViewController: UIViewController, EventDataSource, DayViewDelegate
 
   public lazy var dayView: DayView = DayView()
 
+    
   open override func loadView() {
     view = dayView
   }
@@ -15,8 +16,8 @@ open class DayViewController: UIViewController, EventDataSource, DayViewDelegate
     view.tintColor = UIColor.red
     dayView.dataSource = self
     dayView.delegate = self
-    //dayView.reloadData()
 
+    //dayView.reloadData()
     let sizeClass = traitCollection.horizontalSizeClass
     configureDayViewLayoutForHorizontalSizeClass(sizeClass)
   }

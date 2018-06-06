@@ -25,10 +25,12 @@ public class DayHeaderView: UIView {
   public var selectAllButton:UIButton = UIButton(type: .custom)
   public var deSelectAllButton:UIButton = UIButton(type: .custom)
   public var selectedDate = Date()
+  public var startDate = Date()
+  public var endDate = Date().add(TimeChunk.dateComponents(days: 13))
   var style = DayHeaderStyle()
     
-  let startDate = Date()
-  let endDate = Date().add(TimeChunk.dateComponents(days: 14))
+//  let startDate = Date()
+//  let endDate = Date().add(TimeChunk.dateComponents(days: 14))
     
   weak var state: DayViewState? {
     willSet(newValue) {
@@ -95,9 +97,7 @@ public class DayHeaderView: UIView {
   }
     
   func configurePages(_ selectedDate: Date = Date())
-  {
-
-    
+  {    
     calendarTypeUpdated = calendarTypeForDates(startDate: startDate, endDate: endDate)
     
     switch calendarTypeUpdated

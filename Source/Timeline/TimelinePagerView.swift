@@ -15,14 +15,14 @@ public class TimelinePagerView: UIView {
   public weak var dataSource: EventDataSource?
   public weak var delegate: TimelinePagerViewDelegate?
   public var isPrevRecenterd:Bool = true
-
+  public var startDate = Date()
+  public var endDate = Date().add(TimeChunk.dateComponents(days: 13))
+    
   public var timelineScrollOffset: CGPoint {
     // Any view is fine as they are all synchronized
     return timelinePager.reusableViews.first?.contentOffset ?? CGPoint()
   }
-
-   let startDate = Date()
-   let endDate = Date().add(TimeChunk.dateComponents(days: 14))
+    
    public var calendar = Calendar.autoupdatingCurrent
 
     
