@@ -99,16 +99,8 @@ class PagingScrollView<T: UIView>: UIScrollView, UIScrollViewDelegate where T: R
     }
   }
 
-  func scrollForwardTwice() {
-    setContentOffset(CGPoint(x: contentOffset.x + (2 * bounds.width), y: 0), animated: true)
-  }
-
   func scrollForward() {
     setContentOffset(CGPoint(x: contentOffset.x + bounds.width, y: 0), animated: true)
-  }
-
-  func scrollBackwardTwice() {
-    setContentOffset(CGPoint(x: contentOffset.x - (2 * bounds.width), y: 0), animated: true)
   }
 
   func scrollBackward() {

@@ -22,8 +22,8 @@ public class DayHeaderView: UIView {
   public weak var selectAllEventsDelegate: SelectAllEventsDelegate?
     
   public var selectAllView: UIView = UIView()
-  public var selectAllButton:UIButton = UIButton(type: .custom)
-  public var deSelectAllButton:UIButton = UIButton(type: .custom)
+  public var selectAllButton:UIButton = UIButton()
+  public var deSelectAllButton:UIButton = UIButton()
   public var selectedDate = Date()
   public var startDate = Date()
   public var endDate = Date().add(TimeChunk.dateComponents(days: 13))
@@ -70,11 +70,15 @@ public class DayHeaderView: UIView {
     selectAllButton.setTitle("Select All", for: .normal)
     selectAllButton.setTitleColor(UIColor.blue, for: .normal)
     selectAllButton.addTarget(self, action: #selector(selectAllButtonPressed), for: .touchUpInside)
+    selectAllButton.showsTouchWhenHighlighted = true
+    selectAllButton.setTitleColor(UIColor.black, for: .highlighted)
     
     deSelectAllButton.setTitle("Deselect All", for: .normal)
     deSelectAllButton.setTitleColor(UIColor.blue, for: .normal)
     deSelectAllButton.addTarget(self, action: #selector(deselectAllButtonPressed), for: .touchUpInside)
-    
+    deSelectAllButton.showsTouchWhenHighlighted = true
+    deSelectAllButton.setTitleColor(UIColor.black, for: .highlighted)
+
     selectAllView.addSubview(selectAllButton)
     selectAllView.addSubview(deSelectAllButton)
     selectAllView.groupAndFill(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10)
@@ -227,8 +231,8 @@ public class DayHeaderView: UIView {
     daySymbolsView.anchorAndFillEdge(.top, xPad: 0, yPad: 0, otherSize: daySymbolsViewHeight)
     pagingScrollView.alignAndFillWidth(align: .underCentered, relativeTo: daySymbolsView, padding: 0, height: pagingScrollViewHeight)
     swipeLabelView.alignAndFillWidth(align: .underCentered, relativeTo: pagingScrollView, padding: 0, height: swipeLabelViewHeight)
-    selectAllView.groupAndFill(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10)
-    selectAllView.anchorAndFillEdge(.bottom, xPad: 0, yPad: 10, otherSize: 30)
+    selectAllView.groupInCenter(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10, width: bounds.width/2, height: 30)
+    selectAllView.anchorAndFillEdge(.bottom, xPad: 0, yPad: 0, otherSize: 30)
   }
 
   public func transitionToHorizontalSizeClass(_ sizeClass: UIUserInterfaceSizeClass) {
@@ -285,7 +289,6 @@ extension DayHeaderView: DayViewStateUpdating
     else
     {
         moveToDate(currentPageScrollIndex: Int(pagingScrollView.currentIndex), newDate: newDate)
-
     }
 }
     

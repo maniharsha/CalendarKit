@@ -130,31 +130,45 @@ extension TimelinePagerView: DayViewStateUpdating {
     let oldDate = oldDate.dateOnly()
     let newDate = newDate.dateOnly()
     if newDate.isEarlier(than: oldDate){
-      var timelineDate = newDate.subtract(TimeChunk.dateComponents(days: 0))
-      for timelineContainer in timelinePager.reusableViews {
-        timelineContainer.timeline.date = timelineDate
-        timelineDate = timelineDate.add(TimeChunk.dateComponents(days: 1))
-        updateTimeline(timelineContainer.timeline)
-      }
+
         if(!isPrevRecenterd)
         {
-            timelinePager.scrollBackwardTwice()
+            var timelineDate = newDate.subtract(TimeChunk.dateComponents(days: 1))
+            for timelineContainer in timelinePager.reusableViews {
+                timelineContainer.timeline.date = timelineDate
+                timelineDate = timelineDate.add(TimeChunk.dateComponents(days: 1))
+                updateTimeline(timelineContainer.timeline)
+            }
+            timelinePager.scrollBackward()
         }else
         {
+            var timelineDate = newDate.subtract(TimeChunk.dateComponents(days: 0))
+            for timelineContainer in timelinePager.reusableViews {
+                timelineContainer.timeline.date = timelineDate
+                timelineDate = timelineDate.add(TimeChunk.dateComponents(days: 1))
+                updateTimeline(timelineContainer.timeline)
+            }
             timelinePager.scrollBackward()
         }
     } else if newDate.isLater(than: oldDate) {
-      var timelineDate = newDate.add(TimeChunk.dateComponents(days: 0))
-      for timelineContainer in timelinePager.reusableViews.reversed() {
-        timelineContainer.timeline.date = timelineDate
-        timelineDate = timelineDate.subtract(TimeChunk.dateComponents(days: 1))
-        updateTimeline(timelineContainer.timeline)
-      }
+
         if(!isPrevRecenterd)
         {
-            timelinePager.scrollForwardTwice()
+            var timelineDate = newDate.add(TimeChunk.dateComponents(days: 1))
+            for timelineContainer in timelinePager.reusableViews.reversed() {
+                timelineContainer.timeline.date = timelineDate
+                timelineDate = timelineDate.subtract(TimeChunk.dateComponents(days: 1))
+                updateTimeline(timelineContainer.timeline)
+            }
+            timelinePager.scrollForward()
         }else
         {
+            var timelineDate = newDate.add(TimeChunk.dateComponents(days: 0))
+            for timelineContainer in timelinePager.reusableViews.reversed() {
+                timelineContainer.timeline.date = timelineDate
+                timelineDate = timelineDate.subtract(TimeChunk.dateComponents(days: 1))
+                updateTimeline(timelineContainer.timeline)
+            }
             timelinePager.scrollForward()
         }
     }
