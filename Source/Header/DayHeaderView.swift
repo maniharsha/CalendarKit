@@ -72,12 +72,14 @@ public class DayHeaderView: UIView {
     selectAllButton.addTarget(self, action: #selector(selectAllButtonPressed), for: .touchUpInside)
     selectAllButton.showsTouchWhenHighlighted = true
     selectAllButton.setTitleColor(UIColor.black, for: .highlighted)
-    
+    selectAllButton.titleLabel?.font = swipeLabelView.style.font
+
     deSelectAllButton.setTitle("Deselect All", for: .normal)
     deSelectAllButton.setTitleColor(UIColor.blue, for: .normal)
     deSelectAllButton.addTarget(self, action: #selector(deselectAllButtonPressed), for: .touchUpInside)
     deSelectAllButton.showsTouchWhenHighlighted = true
     deSelectAllButton.setTitleColor(UIColor.black, for: .highlighted)
+    deSelectAllButton.titleLabel?.font = swipeLabelView.style.font
 
     selectAllView.addSubview(selectAllButton)
     selectAllView.addSubview(deSelectAllButton)
