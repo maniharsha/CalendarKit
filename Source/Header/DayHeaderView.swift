@@ -67,14 +67,14 @@ public class DayHeaderView: UIView {
 
   func configure()
   {
-    selectAllButton.setTitle("Select All", for: .normal)
+    selectAllButton.setTitle("SELECT ALL", for: .normal)
     selectAllButton.setTitleColor(UIColor.blue, for: .normal)
     selectAllButton.addTarget(self, action: #selector(selectAllButtonPressed), for: .touchUpInside)
     selectAllButton.showsTouchWhenHighlighted = true
     selectAllButton.setTitleColor(UIColor.black, for: .highlighted)
     selectAllButton.titleLabel?.font = swipeLabelView.style.font
 
-    deSelectAllButton.setTitle("Deselect All", for: .normal)
+    deSelectAllButton.setTitle("DESELECT ALL", for: .normal)
     deSelectAllButton.setTitleColor(UIColor.blue, for: .normal)
     deSelectAllButton.addTarget(self, action: #selector(deselectAllButtonPressed), for: .touchUpInside)
     deSelectAllButton.showsTouchWhenHighlighted = true
@@ -85,7 +85,6 @@ public class DayHeaderView: UIView {
     selectAllView.addSubview(deSelectAllButton)
     selectAllView.groupAndFill(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10)
     [daySymbolsView, pagingScrollView, swipeLabelView, selectAllView].forEach {
-
       addSubview($0)
     }
     pagingScrollView.viewDelegate = self
