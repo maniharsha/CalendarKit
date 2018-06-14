@@ -18,7 +18,7 @@ enum Generator {
   static func timeStrings12H() -> [String] {
     var AMNumbers = [String]()
 
-    for i in 8...11
+    for i in 6...11
     {
       let string = String(i)
       AMNumbers.append(string)

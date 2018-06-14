@@ -48,7 +48,7 @@ public class TimelineView: UIView, ReusableView {
   var horizontalEventInset: CGFloat = 3
 
   public var fullHeight: CGFloat {
-    return verticalInset * 2 + verticalDiff * 24
+    return verticalInset * 2 + verticalDiff * 28
   }
 
   var calendarWidth: CGFloat {
@@ -105,7 +105,7 @@ public class TimelineView: UIView, ReusableView {
       // Get timeslot of gesture location
       let pressedLocation = gestureRecognizer.location(in: self)
       let percentOfHeight = (pressedLocation.y - verticalInset) / (bounds.height - (verticalInset * 2))
-      let pressedAtHour: Int = Int(24 * percentOfHeight)
+      let pressedAtHour: Int = Int(28 * percentOfHeight)
       delegate?.timelineView(self, didLongPressAt: pressedAtHour)
     }
   }
@@ -292,14 +292,18 @@ public class TimelineView: UIView, ReusableView {
   fileprivate func dateToY(_ date: Date) -> CGFloat {
     if date.dateOnly() > self.date.dateOnly() {
       // Event ending the next day
-      return 24 * verticalDiff + verticalInset
+      return 28 * verticalDiff + verticalInset
     } else if date.dateOnly() < self.date.dateOnly() {
       // Event starting the previous day
       return verticalInset
     } else {
-      let hourY = CGFloat(date.hour) * verticalDiff + verticalInset
-      let minuteY = CGFloat(date.minute) * verticalDiff / 60
-      return hourY + minuteY
+        var hourY:CGFloat = 0.0
+        var minuteY:CGFloat = 0.0
+        
+        hourY = ((CGFloat(date.hour) * verticalDiff ) * 2) + verticalInset
+        minuteY = (CGFloat(date.minute) * verticalDiff / 30)
+        
+        return hourY + minuteY
     }
   }
 }
