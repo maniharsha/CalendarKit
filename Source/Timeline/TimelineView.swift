@@ -297,7 +297,7 @@ public class TimelineView: UIView, ReusableView {
                 
                 var equalWidth = calendarWidth
                 
-                if (totalCount > 1)
+                if (totalCount > 1 ) && (event.descriptor.userInfo as! String != "OOO")
                 {
                     equalWidth = calendarWidth / CGFloat(totalPersonalEventCount + 1)
                 }
