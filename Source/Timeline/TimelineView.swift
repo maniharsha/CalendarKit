@@ -255,11 +255,21 @@ public class TimelineView: UIView, ReusableView {
         {
             let totalCount = CGFloat(overlappingEvents.count)
             var totalPersonalEventCount = 0
+            var totalExistingAppointmentsCount = 0
+            var totalOOOCount = 0
             for event in overlappingEvents
             {
                 if (event.descriptor.userInfo as! String == "PERSONALAPPOINTMENT")
                 {
                     totalPersonalEventCount = totalPersonalEventCount + 1
+                }
+                else if(event.descriptor.userInfo as! String == "EXISTINGAPPOINTMENT")
+                {
+                    totalExistingAppointmentsCount = totalExistingAppointmentsCount + 1
+                }
+                else if(event.descriptor.userInfo as! String == "OOO")
+                {
+                    totalOOOCount = totalOOOCount + 1
                 }
             }
             
@@ -288,21 +298,51 @@ public class TimelineView: UIView, ReusableView {
             {
                 let startY = dateToY(event.descriptor.datePeriod.beginning!)
                 let endY = dateToY(event.descriptor.datePeriod.end!)
-                if (event.descriptor.userInfo as! String == "PERSONALAPPOINTMENT") && (totalCount > 1)
+                if (totalCount > 1)
                 {
-                    floatIndex = floatIndex + 1
+                    if (event.descriptor.userInfo as! String == "PERSONALAPPOINTMENT")
+                    {
+                        floatIndex = floatIndex + 1
+                    }
+                    else if (event.descriptor.userInfo as! String == "EXISTINGAPPOINTMENT")
+                    {
+                        if (totalOOOCount >= 1 && totalExistingAppointmentsCount >= 1)
+                        {
+                            floatIndex = floatIndex + 1
+                        }
+                    }
                 }
                 
-                var x = leftInset + CGFloat(floatIndex) / CGFloat(totalPersonalEventCount + 1) * calendarWidth
+                var x = leftInset
                 
-                var equalWidth = calendarWidth
+                if (totalOOOCount >= 1 && totalExistingAppointmentsCount >= 1)
+                {
+                    if (event.descriptor.userInfo as! String != "OOO")
+                    {
+                        x = leftInset + CGFloat(floatIndex) / CGFloat(totalPersonalEventCount + totalOOOCount + totalExistingAppointmentsCount) * calendarWidth
+                    }
+                }
+                else
+                {
+                    x = leftInset + CGFloat(floatIndex) / CGFloat(totalPersonalEventCount + 1) * calendarWidth
+                }
+                
+                
+                var eventWidth = calendarWidth
                 
                 if (totalCount > 1 ) && (event.descriptor.userInfo as! String != "OOO")
                 {
-                    equalWidth = calendarWidth / CGFloat(totalPersonalEventCount + 1)
+                    if (totalOOOCount >= 1 && totalExistingAppointmentsCount >= 1)
+                    {
+                        eventWidth =  calendarWidth / CGFloat(totalPersonalEventCount + totalOOOCount + totalExistingAppointmentsCount)
+                    }
+                    else
+                    {
+                        eventWidth = calendarWidth / CGFloat(totalPersonalEventCount + 1)
+                    }
                 }
                 
-                event.frame = CGRect(x: x, y: startY, width: equalWidth, height: endY - startY)
+                event.frame = CGRect(x: x, y: startY, width: eventWidth, height: endY - startY)
             }
         }
     }
@@ -350,3 +390,4 @@ public class TimelineView: UIView, ReusableView {
         }
     }
 }
+
