@@ -117,12 +117,8 @@ public class DayHeaderView: UIView {
         }
         else
         {
-            selectAllView.addSubview(selectAllButton)
-            selectAllView.addSubview(deSelectAllButton)
-            selectAllView.groupAndFill(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10)
-            
-            //selectAllView.addSubview(quickActionButton)
-            //selectAllView.groupInCenter(group: .horizontal, views: [quickActionButton], padding: 10, width: bounds.width/2 - 10, height: 20)
+            selectAllView.addSubview(quickActionButton)
+            selectAllView.groupInCenter(group: .horizontal, views: [quickActionButton], padding: 10, width: bounds.width/2 - 10, height: 20)
         }
         
         [daySymbolsView, pagingScrollView, swipeLabelView, selectAllView].forEach {
@@ -285,8 +281,7 @@ public class DayHeaderView: UIView {
         }
         else
         {
-            selectAllView.groupInCenter(group: .horizontal, views: [selectAllButton, deSelectAllButton], padding: 10, width: bounds.width/2, height: 30)
-            //selectAllView.groupInCenter(group: .horizontal, views: [quickActionButton], padding: 10, width: bounds.width/2, height: 30)
+            selectAllView.groupInCenter(group: .horizontal, views: [quickActionButton], padding: 10, width: bounds.width/2, height: 30)
         }
         
         selectAllView.anchorAndFillEdge(.bottom, xPad: 0, yPad: 0, otherSize: 30)
